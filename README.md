@@ -23,7 +23,7 @@ Run the following commands in Terminal:
 
 ```bash
 cd /tmp
-git clone https://github.com/cmer/lg-tv-control-macos.git
+git clone https://github.com/Glitchzzy/lg-tv-control-macos.git
 cd lg-tv-control-macos
 ./install.sh
 ```
@@ -43,13 +43,13 @@ rm -fr ~/opt/lgtv
 By now, you should be able to run
 
 ```sh
-~/bin/lgtv scan ssl
+~/.config/scripts/lgtv scan ssl
 ```
 
 and see some info about your TV. Grab your TV's IP address from the output. Then:
 
 ```sh
-~/bin/lgtv auth <ip_address_here> MyTV --ssl
+~/.config/scripts/lgtv <ip_address_here> MyTV --ssl
 ```
 
 and follow the instructions on your TV.
@@ -57,13 +57,13 @@ and follow the instructions on your TV.
 Now, try the following:
 
 ```sh
-~/bin/lgtv --name MyTV --ssl swInfo
-~/bin/lgtv --name MyTV --ssl screenOff
+~/.config/scripts/lgtv --name MyTV --ssl swInfo
+~/.config/scripts/lgtv --name MyTV --ssl screenOff
 ```
 
 If everything is working as expected, your screen should turn off.
 
-Change the HDMI input at the top of `~/.hammerspoon/init_lgtv.lua` script, if needed.
+Change the HDMI input at the top of `~/.config/hammerspoon/init_lgtv.lua` script, if needed.
 
 ## Special Thanks
 
