@@ -48,7 +48,7 @@ defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/i
 if ! grep -q 'require "lgtv_init"' "$HAMMER_CONFIG_PATH/init.lua"; then
   echo 'require "lgtv_init"' >> "$HAMMER_CONFIG_PATH/init.lua"
 fi
-cp ./lgtv_init.lua "$HAMMER_CONFIG_PATH/Spoons/LGWebOSRemote/lgtv_init.lua"
+cp ./lgtv_init.lua "$HAMMER_CONFIG_PATH/lgtv_init.lua"
 
 # Download and Install LGWebOSRemote
 echo -e "\033[32mDownloading LGWebOSRemote...\033[0m"
