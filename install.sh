@@ -1,5 +1,6 @@
 #!/bin/zsh
 
+# Help Message
 if [[ " $* " =~ " --help " ]]; then
   echo "Usage: $0 [OPTIONS]"
   echo ""
@@ -10,17 +11,17 @@ if [[ " $* " =~ " --help " ]]; then
   exit 0
 fi
 
+# Check for Homebrew
 if [[ ! " $* " =~ " --skip-homebrew " ]]; then
-  if ! command -v brew &> /dev/null
-  then
+  if ! command -v brew &> /dev/null; then
     echo -e "\033[1;31mHomebrew is not installed. Please install Homebrew and try again.\033[0m"
     exit 1
   fi
 fi
 
+# Check and Install Mise
 if [[ ! " $* " =~ " --skip-mise " ]]; then
-  if ! command -v mise &> /dev/null
-  then
+  if ! command -v mise &> /dev/null; then
     echo -e "\033[1;33mMise is not installed. Preparing to install it... CTRL-C to abort.\033[0m"
     sleep 3
 
@@ -36,41 +37,50 @@ if [[ ! " $* " =~ " --skip-mise " ]]; then
   fi
 fi
 
+# Install Hammerspoon
 echo -e "\033[32mInstalling Hammerspoon...\033[0m"
 brew install -q hammerspoon
-mkdir -p ~/.hammerspoon
-touch ~/.hammerspoon/init.lua
-if ! grep -q 'require "lgtv_init"' ~/.hammerspoon/init.lua; then
-  echo "require \"lgtv_init\"" >> ~/.hammerspoon/init.lua
+HAMMER_CONFIG_PATH=~/.config/hammerspoon
+mkdir -p "$HAMMER_CONFIG_PATH/Spoons/LGWebOSRemote"
+touch "$HAMMER_CONFIG_PATH/init.lua"
+defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
+
+if ! grep -q 'require "lgtv_init"' "$HAMMER_CONFIG_PATH/init.lua"; then
+  echo 'require "lgtv_init"' >> "$HAMMER_CONFIG_PATH/init.lua"
 fi
-cp ./lgtv_init.lua ~/.hammerspoon/lgtv_init.lua
+cp ./lgtv_init.lua "$HAMMER_CONFIG_PATH/Spoons/LGWebOSRemote/lgtv_init.lua"
 
+# Download and Install LGWebOSRemote
 echo -e "\033[32mDownloading LGWebOSRemote...\033[0m"
-mkdir -p ~/opt
-cd ~/opt
+LG_REMOTE_PATH=~/.config/hammerspoon/Spoons/LGWebOSRemote
+mkdir -p "$LG_REMOTE_PATH"
+cd "$LG_REMOTE_PATH"
 rm -rf LGWebOSRemote
-git clone  --quiet https://github.com/klattimer/LGWebOSRemote.git
+git clone --quiet https://github.com/Glitchzzy/LGWebOSRemote.git
 
-echo -e "\033[32mInstalling Python...\033[0m"
+# Python Setup
+echo -e "\033[32mInstalling Python and Dependencies...\033[0m"
 cd LGWebOSRemote
 mise use python@3.8.18
 mise install
 mise exec -- python -V
 
-echo -e "\033[32mInstalling LGWebOSRemote...\033[0m"
 mise exec -- pip install --upgrade pip > /dev/null
 mise exec -- pip install setuptools > /dev/null
 mise exec -- python setup.py install > /dev/null
 
+# Create Symlink for LGTV Binary
+echo -e "\033[32mCreating LGTV Symlink...\033[0m"
 LGTVPATH=$(mise exec -- which lgtv)
-echo "lgtv executable can be found at $LGTVPATH"
-mkdir -p ~/bin
-rm -f ~/bin/lgtv
-ln -s $LGTVPATH ~/bin/lgtv
+SCRIPTS_PATH=~/.config/scripts
+mkdir -p "$SCRIPTS_PATH"
+rm -f "$SCRIPTS_PATH/lgtv"
+ln -s "$LGTVPATH" "$SCRIPTS_PATH/lgtv"
 
-$LGTVPATH scan ssl
+"$SCRIPTS_PATH/lgtv" scan ssl
 
+# Completion Message
 echo -e "\033[32m\n--------------------------------------------------------------------\033[0m"
 echo " Installation Complete!"
-echo " You can now use the '~/bin/lgtv' command to control your LG TV."
+echo " You can now use the '$SCRIPTS_PATH/lgtv' command to control your LG TV."
 echo -e "\033[32m--------------------------------------------------------------------\n\033[0m"
