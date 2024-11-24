@@ -52,7 +52,7 @@ cp ./lgtv_init.lua "$HAMMER_CONFIG_PATH/Spoons/LGWebOSRemote/lgtv_init.lua"
 
 # Download and Install LGWebOSRemote
 echo -e "\033[32mDownloading LGWebOSRemote...\033[0m"
-LG_REMOTE_PATH=~/.config/hammerspoon/Spoons/LGWebOSRemote
+LG_REMOTE_PATH=~/.config/hammerspoon/Spoons/
 mkdir -p "$LG_REMOTE_PATH"
 cd "$LG_REMOTE_PATH"
 rm -rf LGWebOSRemote
